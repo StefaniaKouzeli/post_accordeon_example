@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8"/>
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> 
+	    <link href="stylesheet.css" rel="stylesheet"/>
+	    <script src="jquery-1.12.0.js"></script>
+
+	</head>
+		<body>
+			<!--Post an Update Container-->
+			<div class="container">
+				<div class="row" id="upper_row">
+					<div class="col-12"> <!--full width-->
+						<form>
+							<div class="form-group">
+					      		<label for="comment" style="color:white;">Post an Update:</label>
+					      		<textarea class="form-control" rows="3" cols="10" id="textarea" maxlength="500"></textarea>
+								<span id="count"></span>
+					    	</div>
+					    	<div class="buttons" style="float:right">
+						    	<button type="button" class="btn btn-info" id="b1">Cancel</button>
+						    	<button type="button" class="btn btn-info" id="b2">Publish Content</button>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="row" id="down_row">
+					<div class="col-12">
+						<!--add dynamically panels-->
+					</div>
+				</div>
+			</div>
+		</body>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			/* --- Event Definition for counting text area characters --- (BEGIN)*/
+			$('#textarea').keyup(function() {
+			    var text_length = $('#textarea').val().length;
+			    $('#count').html(text_length);
+			}); /* <--- (END)*/	
+
+			/* --- Post Content on Panel Accordion --- (BEGIN)*/
+			$('#b2').click(function() {
+				     var input_text = $('#textarea').val();
+				     if (input_text != ""){
+				     	 var formatTimeDate = getDateFormat();
+				     	 Print_panel(input_text,formatTimeDate);
+				     	}					     
+				}); /* <--- (END)*/	
+
+			/* --- Removing Content from textarea --- (BEGIN)*/
+			$('#b1').click(function() {
+					document.getElementById('textarea').value = "";
+					var text_length = $('#textarea').val().length;
+			        $('#count').html(text_length);
+			        $('.panel panel-default').remove();
+				});	/* <--- (END)*/
+		}); 		
+		/* --- Function for creating DayTime Format --- (BEGIN)*/
+		function getDateFormat () {
+				var d = new Date(), 
+					year = d.getFullYear(), 
+					month = "" + (d.getMonth()+1), 
+					day = "" + d.getDate(), 
+					hours = "" + d.getHours(), 
+					minutes = "" + d.getMinutes(), 
+					sec = "" + d.getSeconds();
+
+					if (month.length == 1 )
+						month = '0' + month;	
+
+					if (day.length == 1)
+						day = "0" + day;	
+
+					if (hours.length == 1)
+						hours = "0" + hours;
+
+					if (minutes.length == 1)
+						minutes = "0" + minutes;
+
+					if (sec.length == 1)
+						sec = "0" + sec;
+
+				var formatDate = [year,month,day].join('-');
+				var formatTime = [hours,minutes,sec].join(':');		
+				var finalDateTime = (" " + formatDate + " " + formatTime).italics();
+				return finalDateTime;
+			}; /* <--- (END)*/
+
+		/* --- Function for Adding a new panel on Accordion --- (BEGIN)*/
+		function Print_panel(input_text,formatTimeDate){
+			var panel_default = "<div class='panel panel-default'>";
+			var panel_body ="<div class='panel-body' 'style='word-break:break-all'>";
+			var inner_div_content = "<div class='panel_content'>" + input_text + "</div>";
+			var inner_div_daytime = "<div class='post_time'>Posted at:" + formatTimeDate + "</div>";
+			var inner_div_delete = "<div class='clear_content'><a href='#' style='color:red' onclick='a_onClick(this)'><u>Delete</u></a></div>";
+			var out_var = panel_default + panel_body + inner_div_content + inner_div_daytime + inner_div_delete + "</div></div>";
+			$(".col-12:last").append(out_var);
+			//kane mou to value to text area keno//
+			document.getElementById('textarea').value = "";
+			var text_length = $('#textarea').val().length;
+			$('#count').html(text_length);
+			} /* <--- (END)*/
+
+			/* --- Function called for removing panels --- (BEGIN)*/
+			function a_onClick(element){
+    			$(element).parent().closest('.panel').remove();
+  			 }/* <--- (END)*/
+	</script>
+</html>
